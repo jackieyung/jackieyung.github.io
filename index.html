@@ -1,9 +1,75 @@
-<!DOCTYPE html>
-<html>
-<body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
-</body>
-</html>
-# example
-## **hello world**
+<p>[TOC]</p>
+
+<h1>Feathering</h1>
+
+<h2>sdk_common</h2>
+
+<p>20171025工程位置：/data<em>2T/feathering/sdk</em>common</p>
+
+<h3>1.编译工程</h3>
+
+<p><code>bash
+cd sdk_common
+cppbuild dep
+cppbuild build --build-type=release --install
+</code></p>
+
+<h3>2.编译sample</h3>
+
+<p><code>bash
+cd sdk_common/install/linux-x86_64/release/samples/common/
+mkdir build
+cmake ..
+make
+</code>
+本步完成后即编译完成了sample文件</p>
+
+<h3>3.模型单图测试</h3>
+
+<p><code></code>`bash</p>
+
+<h2>feathering</h2>
+
+<p>./test<em>sample</em>common<em>segment ../images/face</em>01.jpg ../images/bg.jpg out.jpg /data<em>2T/0001segmentation/submit</em>model/4x<em>feathering/M</em>Segment<em>LargeV23</em>4x_Feathering.model  </p>
+
+<h2>binary mask</h2>
+
+<p>./test<em>sample</em>common<em>segment ../images/face</em>01.jpg ../images/bg.jpg out.jpg /data<em>2T/submit</em>model/4x<em>new</em>225/M<em>Segment</em>largerV23<em>4x</em>new<em>225</em>Human.model
+<code></code>`</p>
+
+<h3>4.修改源码</h3>
+
+<ul><li>sdk_common/src/stsdk/PartSeg.cpp</li><li>sdk<em>common/samples/sample</em>common_segment.cpp</li></ul>
+
+<h3>5.特别注意</h3>
+
+<ul><li>feather模块输出名称固定为：<strong>interp<em>predicted</em>matte</strong>&lt;br/&gt;
+<code></code>`C++
+//feathering
+if (output<em>blob.channels() == 1) {
+output</em>blob = m<em>model-&gt;GetBlobByName(&quot;interp</em>predicted<em>matte&quot;);
+} else {
+image</em>faceseg.convertTo(image<em>faceseg, CV</em>32F);//binary mask
+}</li></ul>
+
+<p><code>
+* feather和binary mask输出的mask值域不同：feather为[0,255], binary mask为[0,1]。在sample_common_segment.cpp中去判别使用。
+</code>C++</p>
+
+<h1>include &lt;regex&gt;</h1>
+
+<p>static const std::regex re(&quot;[fF]eathering&quot;);
+bool isFeatheringmodel = std::regex<em>search(model</em>pathname, re);</p>
+
+<p>if (isFeatheringmodel) {
+    image<em>faceseg.convertTo(image</em>faceseg, CV_32F, 1/255.0);
+}
+<code></code>`</p>
+
+<h3>6.上传gitlab</h3>
+
+<p><code>bash
+git push origin HEAD:refs/for/master
+</code></p>
+
+<h2>st_mobile</h2>
